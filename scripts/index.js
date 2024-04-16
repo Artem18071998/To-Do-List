@@ -51,20 +51,19 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Обработчик отправки формы
-  taskForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    const taskText = taskInput.value.trim();
-    const taskStartValue = taskStart.value;
-    if (taskText !== '') {
-      const newTask = createTask(taskText, taskStartValue);
-      workingTasks.appendChild(newTask);
-      taskInput.value = '';
-      taskStart.value = '';
-      // Добавляем счетчик времени для новой задачи
-      const timerSpan = newTask.querySelector('.timer');
-      timerSpan.dataset.start = new Date().toISOString();
-    }
-  });
+taskForm.addEventListener('submit', function(event) {
+  event.preventDefault();
+  const taskText = taskInput.value.trim();
+  if (taskText !== '') {
+    const newTask = createTask(taskText, taskStart.value);
+    workingTasks.appendChild(newTask);
+    taskInput.value = '';
+    taskStart.value = '';
+    // Добавляем счетчик времени для новой задачи
+    const timerSpan = newTask.querySelector('.timer');
+    timerSpan.dataset.start = new Date().toISOString();
+  }
+});
 
   // Обновление счетчика времени каждую секунду
   setInterval(updateTimer, 1000);
