@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const completedTasks = document.getElementById('completed-tasks');
   const taskForm = document.getElementById('task-form');
   const taskInput = document.getElementById('task-input');
-  const taskDate = document.getElementById('task-date');
+  const taskStart = document.getElementById('task-start');
+  const taskEnd = document.getElementById('task-end');
   const searchInput = document.getElementById('search-input');
   const addBtn = document.getElementById('add-btn');
   
@@ -14,13 +15,13 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Функция для создания новой задачи
-  function createTask(taskText, taskDate) {
+  function createTask(taskText, taskStartValue, taskEndValue) {
     const taskItem = document.createElement('div');
     taskItem.classList.add('task-item');
     taskItem.innerHTML = `
       <input type="checkbox">
       <span>${taskText}</span>
-      <span>${taskDate}</span>
+      <span>Начало: ${taskStartValue}<br>Окончание: ${taskEndValue}</span>
       <button class="delete-btn">Удалить</button>
     `;
     taskList.appendChild(taskItem);
@@ -30,11 +31,13 @@ document.addEventListener('DOMContentLoaded', function() {
   taskForm.addEventListener('submit', function(event) {
     event.preventDefault();
     const taskText = taskInput.value.trim();
-    const taskDateValue = taskDate.value;
+    const taskStartValue = taskStart.value;
+    const taskEndValue = taskEnd.value;
     if (taskText !== '') {
-      createTask(taskText, taskDateValue);
+      createTask(taskText, taskStartValue, taskEndValue);
       taskInput.value = '';
-      taskDate.value = '';
+      taskStart.value = '';
+      taskEnd.value = '';
     }
   });
   
@@ -43,8 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const taskItem = event.target.closest('.task-item');
     if (event.target.classList.contains('delete-btn')) {
       taskItem.remove();
-      const deleteSound = document.getElementById('delete-sound');
-      deleteSound.play();
     } else if (event.target.type === 'checkbox') {
       if (event.target.checked) {
         taskItem.classList.add('completed');
@@ -61,8 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const taskItem = event.target.closest('.task-item');
     if (event.target.classList.contains('delete-btn')) {
       taskItem.remove();
-      const deleteSound = document.getElementById('delete-sound');
-      deleteSound.play();
     }
   });
   

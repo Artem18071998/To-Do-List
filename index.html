@@ -11,7 +11,8 @@
         <h1>Простой список задач</h1>
         <form id="task-form">
           <input type="text" id="task-input" placeholder="Введите новую задачу" required>
-          <input type="date" id="task-date" required>
+          <input type="datetime-local" id="task-start" required>
+          <input type="datetime-local" id="task-end" required>
           <button type="submit" id="add-btn">Добавить</button>
         </form>
         <input type="text" id="search-input" placeholder="Поиск по задачам">
