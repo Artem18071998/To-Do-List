@@ -93,11 +93,6 @@ workingTasks.addEventListener('click', function(event) {
       const endTimeSpan = document.createElement('span');
       endTimeSpan.textContent = `Окончание: ${currentDate.toLocaleString()}`;
       completedTask.appendChild(endTimeSpan);
-      // Добавляем кнопку "Удалить" в список "Выполненные задачи"
-      const deleteButton = document.createElement('button');
-      deleteButton.textContent = 'Удалить';
-      deleteButton.classList.add('delete-btn');
-      completedTask.appendChild(deleteButton);
       // Добавляем задачу в список "Выполненные задачи"
       completedTasks.appendChild(completedTask);
     }
