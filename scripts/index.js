@@ -9,20 +9,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const searchInput = document.getElementById('search-input');
   const addBtn = document.getElementById('add-btn');
   
-  // Звуковой эффект при нажатии на кнопку "Добавить"
-  addBtn.addEventListener('click', function() {
-    const addSound = document.getElementById('add-sound');
-    addSound.play();
-  });
 
   // Функция для создания новой задачи
-  function createTask(taskText, taskStartValue) {
+  function createTask(taskText, taskStartValue, taskEndValue) {
     const taskItem = document.createElement('div');
     taskItem.classList.add('task-item');
     taskItem.innerHTML = `
       <input type="checkbox">
       <span>${taskText}</span>
-      <span class="timer">00:00:00</span>
+      <span>Начало: ${taskStartValue}<br>Окончание: ${taskEndValue}</span>
       <button class="delete-btn">Удалить</button>
     `;
     return taskItem;
@@ -55,14 +50,20 @@ document.addEventListener('DOMContentLoaded', function() {
     event.preventDefault();
     const taskText = taskInput.value.trim();
     const taskStartValue = taskStart.value;
+    const currentDate = new Date();
+    const taskEndValue = currentDate.toISOString().slice(0,16);
     if (taskText !== '') {
-      const newTask = createTask(taskText, taskStartValue);
+      const newTask = createTask(taskText, taskStartValue, taskEndValue);
       workingTasks.appendChild(newTask);
       taskInput.value = '';
       taskStart.value = '';
+      taskEnd.value = '';
       // Добавляем счетчик времени для новой задачи
-      const timerSpan = newTask.querySelector('.timer');
-      timerSpan.dataset.start = new Date().toISOString();
+      const timerSpan = document.createElement('span');
+      timerSpan.classList.add('timer');
+      timerSpan.dataset.start = currentDate.toISOString();
+      timerSpan.textContent = '00:00:00';
+      newTask.querySelector('span').appendChild(timerSpan);
     }
   });
 
@@ -81,6 +82,10 @@ document.addEventListener('DOMContentLoaded', function() {
         taskItem.remove();
         // Удаление счетчика времени при завершении задачи
         completedTask.querySelector('.timer').remove();
+        // Добавление текущей даты и времени окончания выполнения задачи
+        const currentDate = new Date();
+        const completedTaskEnd = completedTask.querySelector('span:last-child');
+        completedTaskEnd.innerHTML = `Окончание: ${currentDate.toISOString().slice(0,16)}`;
       }
     }
   });
