@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
     event.preventDefault();
     const taskText = taskInput.value.trim();
     const taskStartValue = taskStart.value;
-    const taskEndValue = taskEnd.value;
+    const currentDate = new Date();
+    const taskEndValue = currentDate.toISOString().slice(0,16);
     if (taskText !== '') {
       createTask(taskText, taskStartValue, taskEndValue);
       taskInput.value = '';
