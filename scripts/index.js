@@ -54,15 +54,23 @@ document.addEventListener('DOMContentLoaded', function() {
   taskForm.addEventListener('submit', function(event) {
     event.preventDefault();
     const taskText = taskInput.value.trim();
-    const taskStartValue = taskStart.value;
     if (taskText !== '') {
-      const newTask = createTask(taskText, taskStartValue);
+      const taskStartValue = taskStart.value;
+      const newTask = createTask(taskText);
+      // Добавляем начальное время задачи в список "Задачи в работе"
+      const startTimeSpan = document.createElement('span');
+      startTimeSpan.textContent = `Начало: ${taskStartValue}`;
+      newTask.appendChild(startTimeSpan);
+      // Добавляем задачу в список "Задачи в работе"
       workingTasks.appendChild(newTask);
       taskInput.value = '';
       taskStart.value = '';
       // Добавляем счетчик времени для новой задачи
-      const timerSpan = newTask.querySelector('.timer');
+      const timerSpan = document.createElement('span');
+      timerSpan.classList.add('timer');
       timerSpan.dataset.start = new Date().toISOString();
+      timerSpan.textContent = '00:00:00';
+      newTask.appendChild(timerSpan);
     }
   });
 
@@ -77,10 +85,16 @@ document.addEventListener('DOMContentLoaded', function() {
     } else if (event.target.type === 'checkbox') {
       if (event.target.checked) {
         const completedTask = taskItem.cloneNode(true);
-        completedTasks.appendChild(completedTask);
         taskItem.remove();
         // Удаление счетчика времени при завершении задачи
         completedTask.querySelector('.timer').remove();
+        // Добавление окончательного времени задачи в список "Выполненные задачи"
+        const currentDate = new Date();
+        const endTimeSpan = document.createElement('span');
+        endTimeSpan.textContent = `Окончание: ${currentDate.toLocaleString()}`;
+        completedTask.appendChild(endTimeSpan);
+        // Добавляем задачу в список "Выполненные задачи"
+        completedTasks.appendChild(completedTask);
       }
     }
   });
