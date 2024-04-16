@@ -55,13 +55,18 @@ taskForm.addEventListener('submit', function(event) {
   event.preventDefault();
   const taskText = taskInput.value.trim();
   if (taskText !== '') {
-    const newTask = createTask(taskText, taskStart.value);
+    const taskStartValue = taskStart.value;
+    const newTask = createTask(taskText, taskStartValue);
     workingTasks.appendChild(newTask);
     taskInput.value = '';
     taskStart.value = '';
     // Добавляем счетчик времени для новой задачи
     const timerSpan = newTask.querySelector('.timer');
     timerSpan.dataset.start = new Date().toISOString();
+    // Добавляем начальное время задачи в список "Задачи в работе"
+    const startTimeSpan = document.createElement('span');
+    startTimeSpan.textContent = `Начало: ${taskStartValue}`;
+    newTask.insertBefore(startTimeSpan, timerSpan);
   }
 });
 
@@ -69,20 +74,25 @@ taskForm.addEventListener('submit', function(event) {
   setInterval(updateTimer, 1000);
   
   // Обработчик удаления задачи и перемещения в "Выполненные"
-  workingTasks.addEventListener('click', function(event) {
-    const taskItem = event.target.closest('.task-item');
-    if (event.target.classList.contains('delete-btn')) {
+workingTasks.addEventListener('click', function(event) {
+  const taskItem = event.target.closest('.task-item');
+  if (event.target.classList.contains('delete-btn')) {
+    taskItem.remove();
+  } else if (event.target.type === 'checkbox') {
+    if (event.target.checked) {
+      const completedTask = taskItem.cloneNode(true);
       taskItem.remove();
-    } else if (event.target.type === 'checkbox') {
-      if (event.target.checked) {
-        const completedTask = taskItem.cloneNode(true);
-        completedTasks.appendChild(completedTask);
-        taskItem.remove();
-        // Удаление счетчика времени при завершении задачи
-        completedTask.querySelector('.timer').remove();
-      }
+      completedTasks.appendChild(completedTask);
+      // Удаление счетчика времени при завершении задачи
+      completedTask.querySelector('.timer').remove();
+      // Добавление окончательного времени задачи в список "Выполненные задачи"
+      const currentDate = new Date();
+      const endTimeSpan = document.createElement('span');
+      endTimeSpan.textContent = `Окончание: ${currentDate.toISOString().slice(0,16)}`;
+      completedTask.appendChild(endTimeSpan);
     }
-  });
+  }
+});
 
   // Обработчик удаления задачи из "Выполненные"
   completedTasks.addEventListener('click', function(event) {
