@@ -46,6 +46,14 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
+
+  // Обработчик удаления задачи из "Выполненные"
+  completedTasks.addEventListener('click', function(event) {
+    const taskItem = event.target.closest('.task-item');
+    if (event.target.classList.contains('delete-btn')) {
+      taskItem.remove();
+    }
+  });
   
   // Обработчик поиска задач
   searchInput.addEventListener('input', function(event) {
