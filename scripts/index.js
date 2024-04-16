@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
   taskForm.addEventListener('submit', function(event) {
     event.preventDefault();
     const taskText = taskInput.value.trim();
+    const taskStartValue = taskStart.value;
     if (taskText !== '') {
-      const taskStartValue = taskStart.value;
       const newTask = createTask(taskText, taskStartValue);
       workingTasks.appendChild(newTask);
       taskInput.value = '';
@@ -63,10 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
       // Добавляем счетчик времени для новой задачи
       const timerSpan = newTask.querySelector('.timer');
       timerSpan.dataset.start = new Date().toISOString();
-      // Добавляем начальное время задачи в список "Задачи в работе"
-      const startTimeSpan = document.createElement('span');
-      startTimeSpan.textContent = `Начало: ${taskStartValue}`;
-      newTask.insertBefore(startTimeSpan, timerSpan);
     }
   });
 
@@ -81,20 +77,10 @@ document.addEventListener('DOMContentLoaded', function() {
     } else if (event.target.type === 'checkbox') {
       if (event.target.checked) {
         const completedTask = taskItem.cloneNode(true);
-        taskItem.remove();
         completedTasks.appendChild(completedTask);
+        taskItem.remove();
         // Удаление счетчика времени при завершении задачи
         completedTask.querySelector('.timer').remove();
-        // Добавление окончательного времени задачи в список "Выполненные задачи"
-        const currentDate = new Date();
-        const endTimeSpan = document.createElement('span');
-        endTimeSpan.textContent = `Окончание: ${currentDate.toLocaleString()}`;
-        completedTask.appendChild(endTimeSpan);
-      }
-    }
-  });
-        // Добавляем задачу в список "Выполненные задачи"
-        completedTasks.appendChild(completedTask);
       }
     }
   });
