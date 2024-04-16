@@ -50,71 +50,40 @@ document.addEventListener('DOMContentLoaded', function() {
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
   }
   
-   // Обработчик отправки формы
-taskForm.addEventListener('submit', function(event) {
-  event.preventDefault();
-  const taskText = taskInput.value.trim();
-  const taskStartValue = taskStart.value.trim();
-  console.log('Время начала задачи:', taskStartValue);
-  const isValidTime = /^([01]\d|2[0-3]):([0-5]\d)$/.test(taskStartValue);
-  if (taskText !== '' && isValidTime) {
-    const newTask = createTask(taskText); // Создаем новый элемент задачи
-    // Добавляем начальное время задачи в список "Задачи в работе"
-    const startTimeSpan = document.createElement('span');
-    startTimeSpan.textContent = `Начало: ${taskStartValue}`;
-    newTask.appendChild(startTimeSpan);
-    // Добавляем задачу в список "Задачи в работе"
-    workingTasks.appendChild(newTask); // Добавляем созданный элемент в список "Задачи в работе"
-    taskInput.value = '';
-    taskStart.value = '';
-    // Добавляем счетчик времени для новой задачи
-    const timerSpan = document.createElement('span');
-    timerSpan.classList.add('timer');
-    timerSpan.textContent = '00:00:00';
-    newTask.appendChild(timerSpan);
-    // Запускаем счетчик времени для новой задачи
-    startTimer(timerSpan);
-  } else {
-    alert('Введите корректное время начала задачи в формате HH:MM (например, 09:30).');
-  }
-});
+  // Обработчик отправки формы
+  taskForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const taskText = taskInput.value.trim();
+    const taskStartValue = taskStart.value;
+    if (taskText !== '') {
+      const newTask = createTask(taskText, taskStartValue);
+      workingTasks.appendChild(newTask);
+      taskInput.value = '';
+      taskStart.value = '';
+      // Добавляем счетчик времени для новой задачи
+      const timerSpan = newTask.querySelector('.timer');
+      timerSpan.dataset.start = new Date().toISOString();
+    }
+  });
 
-  // Функция запуска счетчика времени
-function startTimer(timerSpan) {
-  const startTime = new Date(timerSpan.dataset.start).getTime();
-  function updateTimer() {
-    const currentTime = new Date().getTime();
-    const timeDifference = currentTime - startTime;
-    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-    timerSpan.textContent = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-  }
-  // Обновляем счетчик времени каждую секунду
+  // Обновление счетчика времени каждую секунду
   setInterval(updateTimer, 1000);
-}
   
   // Обработчик удаления задачи и перемещения в "Выполненные"
-workingTasks.addEventListener('click', function(event) {
-  const taskItem = event.target.closest('.task-item');
-  if (event.target.classList.contains('delete-btn')) {
-    taskItem.remove();
-  } else if (event.target.type === 'checkbox') {
-    if (event.target.checked) {
-      const completedTask = taskItem.cloneNode(true);
+  workingTasks.addEventListener('click', function(event) {
+    const taskItem = event.target.closest('.task-item');
+    if (event.target.classList.contains('delete-btn')) {
       taskItem.remove();
-      // Удаление счетчика времени при завершении задачи
-      completedTask.querySelector('.timer').remove();
-      // Добавление окончательного времени задачи в список "Выполненные задачи"
-      const currentDate = new Date();
-      const endTimeSpan = document.createElement('span');
-      endTimeSpan.textContent = `Окончание: ${currentDate.toLocaleString()}`;
-      completedTask.appendChild(endTimeSpan);
-      // Добавляем задачу в список "Выполненные задачи"
-      completedTasks.appendChild(completedTask);
+    } else if (event.target.type === 'checkbox') {
+      if (event.target.checked) {
+        const completedTask = taskItem.cloneNode(true);
+        completedTasks.appendChild(completedTask);
+        taskItem.remove();
+        // Удаление счетчика времени при завершении задачи
+        completedTask.querySelector('.timer').remove();
+      }
     }
-  }
-});
+  });
 
   // Обработчик удаления задачи из "Выполненные"
   completedTasks.addEventListener('click', function(event) {
