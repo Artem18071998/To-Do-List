@@ -50,12 +50,13 @@ document.addEventListener('DOMContentLoaded', function() {
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
   }
   
-  // Обработчик отправки формы
+   // Обработчик отправки формы
 taskForm.addEventListener('submit', function(event) {
   event.preventDefault();
   const taskText = taskInput.value.trim();
-  if (taskText !== '') {
-    const taskStartValue = taskStart.value;
+  const taskStartValue = taskStart.value.trim();
+  const isValidTime = /^([01]\d|2[0-3]):([0-5]\d)$/.test(taskStartValue);
+  if (taskText !== '' && isValidTime) {
     const newTask = createTask(taskText);
     // Добавляем начальное время задачи в список "Задачи в работе"
     const startTimeSpan = document.createElement('span');
@@ -73,6 +74,8 @@ taskForm.addEventListener('submit', function(event) {
     newTask.appendChild(timerSpan);
     // Запускаем счетчик времени для новой задачи
     startTimer(timerSpan);
+  } else {
+    alert('Введите корректное время начала задачи в формате HH:MM (например, 09:30).');
   }
 });
 
