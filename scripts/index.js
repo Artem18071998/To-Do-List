@@ -55,6 +55,7 @@ taskForm.addEventListener('submit', function(event) {
   event.preventDefault();
   const taskText = taskInput.value.trim();
   const taskStartValue = taskStart.value.trim();
+  console.log('Время начала задачи:', taskStartValue);
   const isValidTime = /^([01]\d|2[0-3]):([0-5]\d)$/.test(taskStartValue);
   if (taskText !== '' && isValidTime) {
     const newTask = createTask(taskText);
