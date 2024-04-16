@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   const taskList = document.getElementById('task-list');
+  const workingTasks = document.getElementById('working-tasks');
   const completedTasks = document.getElementById('completed-tasks');
   const taskForm = document.getElementById('task-form');
   const taskInput = document.getElementById('task-input');
@@ -24,7 +25,29 @@ document.addEventListener('DOMContentLoaded', function() {
       <span>Начало: ${taskStartValue}<br>Окончание: ${taskEndValue}</span>
       <button class="delete-btn">Удалить</button>
     `;
-    taskList.appendChild(taskItem);
+    return taskItem;
+  }
+
+  // Функция для обновления счетчика времени
+  function updateTimer() {
+    const workingTasksItems = workingTasks.getElementsByClassName('task-item');
+    Array.from(workingTasksItems).forEach(function(taskItem) {
+      const timeElement = taskItem.querySelector('.timer');
+      if (timeElement) {
+        const startDate = new Date(timeElement.dataset.start);
+        const currentTime = new Date();
+        const elapsedTime = Math.floor((currentTime - startDate) / 1000); // Прошедшее время в секундах
+        timeElement.textContent = formatTime(elapsedTime);
+      }
+    });
+  }
+
+  // Функция для форматирования времени в формат hh:mm:ss
+  function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
   }
   
   // Обработчик отправки формы
@@ -35,27 +58,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentDate = new Date();
     const taskEndValue = currentDate.toISOString().slice(0,16);
     if (taskText !== '') {
-      createTask(taskText, taskStartValue, taskEndValue);
+      const newTask = createTask(taskText, taskStartValue, taskEndValue);
+      workingTasks.appendChild(newTask);
       taskInput.value = '';
       taskStart.value = '';
       taskEnd.value = '';
+      // Добавляем счетчик времени для новой задачи
+      const timerSpan = document.createElement('span');
+      timerSpan.classList.add('timer');
+      timerSpan.dataset.start = currentDate.toISOString();
+      timerSpan.textContent = '00:00:00';
+      newTask.querySelector('span').appendChild(timerSpan);
     }
   });
+
+  // Обновление счетчика времени каждую секунду
+  setInterval(updateTimer, 1000);
   
   // Обработчик удаления задачи и перемещения в "Выполненные"
-  taskList.addEventListener('click', function(event) {
+  workingTasks.addEventListener('click', function(event) {
     const taskItem = event.target.closest('.task-item');
     if (event.target.classList.contains('delete-btn')) {
       taskItem.remove();
     } else if (event.target.type === 'checkbox') {
       if (event.target.checked) {
-        taskItem.classList.add('completed');
         const completedTask = taskItem.cloneNode(true);
         completedTasks.appendChild(completedTask);
         taskItem.remove();
-      } else {
-        taskItem.classList.remove('completed');
-        taskList.appendChild(taskItem);
+        // Удаление счетчика времени при завершении задачи
+        completedTask.querySelector('.timer').remove();
+        // Добавление текущей даты и времени окончания выполнения задачи
+        const currentDate = new Date();
+        const completedTaskEnd = completedTask.querySelector('span:last-child');
+        completedTaskEnd.innerHTML = `Окончание: ${currentDate.toISOString().slice(0,16)}`;
       }
     }
   });
@@ -71,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Обработчик поиска задач
   searchInput.addEventListener('input', function(event) {
     const searchTerm = event.target.value.toLowerCase();
-    const tasks = taskList.getElementsByClassName('task-item');
+    const tasks = workingTasks.getElementsByClassName('task-item');
     Array.from(tasks).forEach(function(task) {
       const text = task.getElementsByTagName('span')[0].textContent.toLowerCase();
       if (text.includes(searchTerm)) {
