@@ -58,7 +58,7 @@ taskForm.addEventListener('submit', function(event) {
   console.log('Время начала задачи:', taskStartValue);
   const isValidTime = /^([01]\d|2[0-3]):([0-5]\d)$/.test(taskStartValue);
   if (taskText !== '' && isValidTime) {
-    const newTask = createTask(taskText);
+    const newTask = createTask(taskText); // Создаем новый элемент задачи
     // Добавляем начальное время задачи в список "Задачи в работе"
     const startTimeSpan = document.createElement('span');
     startTimeSpan.textContent = `Начало: ${taskStartValue}`;
