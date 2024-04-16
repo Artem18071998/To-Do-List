@@ -50,7 +50,9 @@ document.addEventListener('DOMContentLoaded', function() {
     } else if (event.target.type === 'checkbox') {
       if (event.target.checked) {
         taskItem.classList.add('completed');
-        completedTasks.appendChild(taskItem);
+        const completedTask = taskItem.cloneNode(true);
+        completedTasks.appendChild(completedTask);
+        taskItem.remove();
       } else {
         taskItem.classList.remove('completed');
         taskList.appendChild(taskItem);
