@@ -88,7 +88,7 @@ workingTasks.addEventListener('click', function(event) {
       // Добавление окончательного времени задачи в список "Выполненные задачи"
       const currentDate = new Date();
       const endTimeSpan = document.createElement('span');
-      endTimeSpan.textContent = `Окончание: ${currentDate.toISOString().slice(0,16)}`;
+      endTimeSpan.textContent = `Окончание: ${currentDate.toLocaleString()}`;
       completedTask.appendChild(endTimeSpan);
     }
   }
