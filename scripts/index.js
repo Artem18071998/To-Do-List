@@ -64,7 +64,7 @@ taskForm.addEventListener('submit', function(event) {
     startTimeSpan.textContent = `Начало: ${taskStartValue}`;
     newTask.appendChild(startTimeSpan);
     // Добавляем задачу в список "Задачи в работе"
-    workingTasks.appendChild(newTask);
+    workingTasks.appendChild(newTask); // Добавляем созданный элемент в список "Задачи в работе"
     taskInput.value = '';
     taskStart.value = '';
     // Добавляем счетчик времени для новой задачи
