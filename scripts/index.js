@@ -70,7 +70,6 @@ taskForm.addEventListener('submit', function(event) {
     // Добавляем счетчик времени для новой задачи
     const timerSpan = document.createElement('span');
     timerSpan.classList.add('timer');
-    timerSpan.dataset.start = new Date().toISOString();
     timerSpan.textContent = '00:00:00';
     newTask.appendChild(timerSpan);
     // Запускаем счетчик времени для новой задачи
