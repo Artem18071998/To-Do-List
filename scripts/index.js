@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Звуковой эффект при нажатии на кнопку "Добавить"
   addBtn.addEventListener('click', function() {
-    const clickSound = document.getElementById('click-sound');
-    clickSound.play();
+    const addSound = document.getElementById('add-sound');
+    addSound.play();
   });
 
   // Функция для создания новой задачи
@@ -43,6 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const taskItem = event.target.closest('.task-item');
     if (event.target.classList.contains('delete-btn')) {
       taskItem.remove();
+      const deleteSound = document.getElementById('delete-sound');
+      deleteSound.play();
     } else if (event.target.type === 'checkbox') {
       if (event.target.checked) {
         taskItem.classList.add('completed');
@@ -59,6 +61,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const taskItem = event.target.closest('.task-item');
     if (event.target.classList.contains('delete-btn')) {
       taskItem.remove();
+      const deleteSound = document.getElementById('delete-sound');
+      deleteSound.play();
     }
   });
   
