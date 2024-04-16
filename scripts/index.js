@@ -11,13 +11,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
 
   // Функция для создания новой задачи
-  function createTask(taskText, taskStartValue, taskEndValue) {
+  function createTask(taskText, taskStartValue) {
     const taskItem = document.createElement('div');
     taskItem.classList.add('task-item');
     taskItem.innerHTML = `
       <input type="checkbox">
       <span>${taskText}</span>
-      <span>Начало: ${taskStartValue}<br>Окончание: ${taskEndValue}</span>
+      <span class="timer">00:00:00</span>
       <button class="delete-btn">Удалить</button>
     `;
     return taskItem;
@@ -50,20 +50,14 @@ document.addEventListener('DOMContentLoaded', function() {
     event.preventDefault();
     const taskText = taskInput.value.trim();
     const taskStartValue = taskStart.value;
-    const currentDate = new Date();
-    const taskEndValue = currentDate.toISOString().slice(0,16);
     if (taskText !== '') {
-      const newTask = createTask(taskText, taskStartValue, taskEndValue);
+      const newTask = createTask(taskText, taskStartValue);
       workingTasks.appendChild(newTask);
       taskInput.value = '';
       taskStart.value = '';
-      taskEnd.value = '';
       // Добавляем счетчик времени для новой задачи
-      const timerSpan = document.createElement('span');
-      timerSpan.classList.add('timer');
-      timerSpan.dataset.start = currentDate.toISOString();
-      timerSpan.textContent = '00:00:00';
-      newTask.querySelector('span').appendChild(timerSpan);
+      const timerSpan = newTask.querySelector('.timer');
+      timerSpan.dataset.start = new Date().toISOString();
     }
   });
 
@@ -82,10 +76,6 @@ document.addEventListener('DOMContentLoaded', function() {
         taskItem.remove();
         // Удаление счетчика времени при завершении задачи
         completedTask.querySelector('.timer').remove();
-        // Добавление текущей даты и времени окончания выполнения задачи
-        const currentDate = new Date();
-        const completedTaskEnd = completedTask.querySelector('span:last-child');
-        completedTaskEnd.innerHTML = `Окончание: ${currentDate.toISOString().slice(0,16)}`;
       }
     }
   });
