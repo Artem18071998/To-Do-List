@@ -71,11 +71,25 @@ taskForm.addEventListener('submit', function(event) {
     timerSpan.dataset.start = new Date().toISOString();
     timerSpan.textContent = '00:00:00';
     newTask.appendChild(timerSpan);
+    // Запускаем счетчик времени для новой задачи
+    startTimer(timerSpan);
   }
 });
 
-  // Обновление счетчика времени каждую секунду
+  // Функция запуска счетчика времени
+function startTimer(timerSpan) {
+  const startTime = new Date(timerSpan.dataset.start).getTime();
+  function updateTimer() {
+    const currentTime = new Date().getTime();
+    const timeDifference = currentTime - startTime;
+    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    timerSpan.textContent = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+  }
+  // Обновляем счетчик времени каждую секунду
   setInterval(updateTimer, 1000);
+}
   
   // Обработчик удаления задачи и перемещения в "Выполненные"
 workingTasks.addEventListener('click', function(event) {
