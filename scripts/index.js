@@ -5,7 +5,14 @@ document.addEventListener('DOMContentLoaded', function() {
   const taskInput = document.getElementById('task-input');
   const taskDate = document.getElementById('task-date');
   const searchInput = document.getElementById('search-input');
+  const addBtn = document.getElementById('add-btn');
   
+  // Звуковой эффект при нажатии на кнопку "Добавить"
+  addBtn.addEventListener('click', function() {
+    const clickSound = document.getElementById('click-sound');
+    clickSound.play();
+  });
+
   // Функция для создания новой задачи
   function createTask(taskText, taskDate) {
     const taskItem = document.createElement('div');

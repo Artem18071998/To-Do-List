@@ -12,7 +12,7 @@
         <form id="task-form">
           <input type="text" id="task-input" placeholder="Введите новую задачу" required>
           <input type="date" id="task-date" required>
-          <button type="submit">Добавить</button>
+          <button type="submit" id="add-btn">Добавить</button>
         </form>
         <input type="text" id="search-input" placeholder="Поиск по задачам">
         <div id="task-list">
@@ -23,6 +23,11 @@
           <!-- Здесь будут отображаться выполненные задачи -->
         </div>
       </div>
+      
+      <audio id="click-sound">
+        <source src="click.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
     <script src="scripts/index.js"></script>
 </body>
 </html>
