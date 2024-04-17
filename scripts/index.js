@@ -63,11 +63,13 @@ document.addEventListener('DOMContentLoaded', function() {
           const currentDate = new Date();
           const taskEndDate = currentDate.toLocaleDateString(); // Получаем текущую дату
           newTask.textContent += ' (конец: ' + taskEndDate + ')';
-          completedTasks.appendChild(newTask);
-          saveTasks();
+          const completedTask = newTask.cloneNode(true); // Клонируем задачу для перемещения в список "Выполненные задачи"
+          completedTasks.appendChild(completedTask); // Добавляем клонированную задачу в список "Выполненные задачи"
+          newTask.remove(); // Удаляем завершенную задачу из списка "Задачи в работе"
+          saveTasks(); // Сохраняем обновленный список задач
         }
       });
-      saveTasks();
+      saveTasks(); // Сохраняем обновленный список задач
     } else {
       console.log('Введите задачу и выберите корректную дату начала!');
     }
