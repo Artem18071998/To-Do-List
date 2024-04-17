@@ -20,6 +20,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (localStorage.getItem('completedTasks')) {
       completedTasks.innerHTML = localStorage.getItem('completedTasks');
     }
+    // Добавляем обработчик клика к каждой задаче в списке "Выполненные задачи"
+    completedTasks.querySelectorAll('.task-item').forEach(function(task) {
+      task.addEventListener('click', function() {
+        const confirmDelete = confirm('Вы уверены, что хотите удалить эту задачу?');
+        if (confirmDelete) {
+          task.remove(); // Удаляем задачу из списка "Выполненные задачи"
+          saveTasks(); // Сохраняем обновленный список задач
+        }
+      });
+    });
   }
 
   // Функция для фильтрации задач
@@ -67,6 +77,14 @@ document.addEventListener('DOMContentLoaded', function() {
           completedTasks.appendChild(completedTask); // Добавляем клонированную задачу в список "Выполненные задачи"
           newTask.remove(); // Удаляем завершенную задачу из списка "Задачи в работе"
           saveTasks(); // Сохраняем обновленный список задач
+          // Добавляем обработчик клика для удаления задачи из списка "Выполненные задачи"
+          completedTask.addEventListener('click', function() {
+            const confirmDelete = confirm('Вы уверены, что хотите удалить эту задачу?');
+            if (confirmDelete) {
+              completedTask.remove(); // Удаляем задачу из списка "Выполненные задачи"
+              saveTasks(); // Сохраняем обновленный список задач
+            }
+          });
         }
       });
       saveTasks(); // Сохраняем обновленный список задач
