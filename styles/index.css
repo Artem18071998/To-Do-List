@@ -28,6 +28,12 @@ h1 {
 .task-item input[type="checkbox"] {
   margin-right: 10px;
 }
+
+li.task-item:hover {
+background-color: #f0f0f0;
+cursor: pointer;
+}
+
 form {
   margin-bottom: 20px;
 }
