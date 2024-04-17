@@ -20,16 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (localStorage.getItem('completedTasks')) {
       completedTasks.innerHTML = localStorage.getItem('completedTasks');
     }
-    // Добавляем обработчик клика к каждой задаче в списке "Выполненные задачи"
-    completedTasks.querySelectorAll('.task-item').forEach(function(task) {
-      task.addEventListener('click', function() {
-        const confirmDelete = confirm('Вы уверены, что хотите удалить эту задачу?');
-        if (confirmDelete) {
-          task.remove(); // Удаляем задачу из списка "Выполненные задачи"
-          saveTasks(); // Сохраняем обновленный список задач
-        }
-      });
-    });
   }
 
   // Функция для фильтрации задач
@@ -53,6 +43,23 @@ document.addEventListener('DOMContentLoaded', function() {
   // Загрузка задач при загрузке страницы
   loadTasks();
 
+  // Добавляем обработчик клика к каждой задаче в списке "Задачи в работе"
+  workingTasks.addEventListener('click', function(event) {
+    const task = event.target.closest('.task-item');
+    if (task) {
+      const confirmDelete = confirm('Вы уверены, что хотите завершить эту задачу?');
+      if (confirmDelete) {
+        const currentDate = new Date();
+        const taskEndDate = currentDate.toLocaleDateString(); // Получаем текущую дату
+        task.textContent += ' (конец: ' + taskEndDate + ')';
+        const completedTask = task.cloneNode(true); // Клонируем задачу для перемещения в список "Выполненные задачи"
+        completedTasks.appendChild(completedTask); // Добавляем клонированную задачу в список "Выполненные задачи"
+        task.remove(); // Удаляем завершенную задачу из списка "Задачи в работе"
+        saveTasks(); // Сохраняем обновленный список задач
+      }
+    }
+  });
+
   taskForm.addEventListener('submit', function(event) {
     event.preventDefault();
     const taskText = taskInput.value.trim();
@@ -65,28 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
       workingTasks.appendChild(newTask);
       taskInput.value = '';
       taskStart.value = '';
-
-      // Обработчик клика по задаче
-      newTask.addEventListener('click', function() {
-        const confirmDelete = confirm('Вы уверены, что хотите завершить эту задачу?');
-        if (confirmDelete) {
-          const currentDate = new Date();
-          const taskEndDate = currentDate.toLocaleDateString(); // Получаем текущую дату
-          newTask.textContent += ' (конец: ' + taskEndDate + ')';
-          const completedTask = newTask.cloneNode(true); // Клонируем задачу для перемещения в список "Выполненные задачи"
-          completedTasks.appendChild(completedTask); // Добавляем клонированную задачу в список "Выполненные задачи"
-          newTask.remove(); // Удаляем завершенную задачу из списка "Задачи в работе"
-          saveTasks(); // Сохраняем обновленный список задач
-          // Добавляем обработчик клика для удаления задачи из списка "Выполненные задачи"
-          completedTask.addEventListener('click', function() {
-            const confirmDelete = confirm('Вы уверены, что хотите удалить эту задачу?');
-            if (confirmDelete) {
-              completedTask.remove(); // Удаляем задачу из списка "Выполненные задачи"
-              saveTasks(); // Сохраняем обновленный список задач
-            }
-          });
-        }
-      });
       saveTasks(); // Сохраняем обновленный список задач
     } else {
       console.log('Введите задачу и выберите корректную дату начала!');
